@@ -1,0 +1,264 @@
+/* Admin Styles for Digital Prophets Stage Slider */
+
+.dpss-admin-header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 30px;
+    border-radius: 10px;
+    margin-bottom: 30px;
+}
+
+.dpss-admin-header .description {
+    font-size: 16px;
+    margin: 10px 0 0 0;
+    opacity: 0.9;
+}
+
+.dpss-admin-header code {
+    background: rgba(255,255,255,0.2);
+    padding: 5px 10px;
+    border-radius: 5px;
+    font-size: 14px;
+}
+
+/* Settings Form */
+.form-table th {
+    font-weight: 600;
+}
+
+.form-table td {
+    padding: 20px 10px;
+}
+
+.form-table input[type="number"],
+.form-table input[type="text"],
+.form-table select {
+    padding: 8px 12px;
+    font-size: 14px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+}
+
+.form-table input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    margin-right: 8px;
+}
+
+.form-table .description {
+    font-size: 13px;
+    color: #666;
+    margin-top: 8px;
+}
+
+/* Info Boxes */
+.dpss-info-box {
+    background: white;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    padding: 20px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+
+.dpss-info-box h3 {
+    margin-top: 0;
+    color: #667eea;
+}
+
+.dpss-info-box ul {
+    list-style: none;
+    padding: 0;
+    margin: 15px 0 0 0;
+}
+
+.dpss-info-box li {
+    padding: 8px 0;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.dpss-info-box li:last-child {
+    border-bottom: none;
+}
+
+.dpss-info-box code {
+    background: #f5f5f5;
+    padding: 3px 8px;
+    border-radius: 3px;
+    font-size: 13px;
+    color: #667eea;
+}
+
+/* Meta Box Styles */
+.dpss-meta-box {
+    padding: 15px;
+}
+
+.dpss-meta-field {
+    margin-bottom: 20px;
+}
+
+.dpss-meta-field label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 8px;
+}
+
+.dpss-meta-field select,
+.dpss-meta-field input[type="text"],
+.dpss-meta-field input[type="date"] {
+    width: 100%;
+    padding: 8px 12px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 14px;
+}
+
+.dpss-meta-field .description {
+    font-size: 13px;
+    color: #666;
+    margin-top: 5px;
+    font-style: italic;
+}
+
+/* Theme Preview */
+.dpss-theme-preview {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 15px;
+    margin-top: 15px;
+}
+
+.dpss-theme-option {
+    position: relative;
+    border: 2px solid transparent;
+    border-radius: 8px;
+    overflow: hidden;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.dpss-theme-option:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+}
+
+.dpss-theme-option.selected {
+    border-color: #667eea;
+    box-shadow: 0 0 0 3px rgba(102,126,234,0.2);
+}
+
+.dpss-theme-option img {
+    width: 100%;
+    height: 100px;
+    object-fit: cover;
+}
+
+.dpss-theme-option .theme-name {
+    padding: 8px;
+    text-align: center;
+    font-size: 12px;
+    background: #f9f9f9;
+}
+
+/* Preview Page */
+.dpss-preview-container {
+    background: white;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    padding: 20px;
+    margin-bottom: 30px;
+}
+
+.dpss-preview-controls {
+    background: #f9f9f9;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    padding: 20px;
+}
+
+.dpss-preview-controls h3 {
+    margin-top: 0;
+}
+
+/* Button Styles */
+.button.dpss-button-primary {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border: none;
+    color: white;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.2);
+}
+
+.button.dpss-button-primary:hover {
+    background: linear-gradient(135deg, #5568d3 0%, #65398d 100%);
+}
+
+/* Status Indicators */
+.dpss-status {
+    display: inline-block;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.dpss-status.active {
+    background: #d4edda;
+    color: #155724;
+}
+
+.dpss-status.inactive {
+    background: #f8d7da;
+    color: #721c24;
+}
+
+/* Loading State */
+.dpss-admin-loading {
+    text-align: center;
+    padding: 40px;
+}
+
+.dpss-admin-loading::after {
+    content: '';
+    display: inline-block;
+    width: 30px;
+    height: 30px;
+    border: 3px solid rgba(102,126,234,0.3);
+    border-top-color: #667eea;
+    border-radius: 50%;
+    animation: dpss-admin-spin 1s linear infinite;
+}
+
+@keyframes dpss-admin-spin {
+    to { transform: rotate(360deg); }
+}
+
+/* Notices */
+.dpss-notice {
+    padding: 15px;
+    border-left: 4px solid #667eea;
+    background: #f0f4ff;
+    margin-bottom: 20px;
+    border-radius: 3px;
+}
+
+.dpss-notice.error {
+    border-left-color: #dc3545;
+    background: #fff5f5;
+}
+
+.dpss-notice.success {
+    border-left-color: #28a745;
+    background: #f0fff4;
+}
+
+/* Responsive */
+@media (max-width: 782px) {
+    .dpss-admin-header {
+        padding: 20px;
+    }
+    
+    .dpss-theme-preview {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}

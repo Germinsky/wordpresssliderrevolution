@@ -1,0 +1,300 @@
+/* Digital Prophets Stage Slider - Main Styles */
+
+:root {
+    --dpss-primary: #667eea;
+    --dpss-secondary: #764ba2;
+    --dpss-gold: #ffd700;
+    --dpss-dark: #1a1a1a;
+    --dpss-light: #f0f0f0;
+}
+
+/* Stage Slider Container */
+.dpss-stage-wrapper {
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+    background: var(--dpss-dark);
+}
+
+/* Song of the Day Widget */
+.dpss-song-of-day {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-radius: 20px;
+    padding: 30px;
+    color: white;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+}
+
+.dpss-song-of-day.dpss-layout-card {
+    display: flex;
+    gap: 30px;
+    align-items: center;
+}
+
+.dpss-song-of-day.dpss-layout-minimal {
+    padding: 20px;
+    background: rgba(255,255,255,0.05);
+    backdrop-filter: blur(10px);
+}
+
+.dpss-artwork {
+    flex-shrink: 0;
+}
+
+.dpss-artwork img {
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+    object-fit: cover;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+    transition: transform 0.3s;
+}
+
+.dpss-artwork img:hover {
+    transform: scale(1.05) rotate(5deg);
+}
+
+.dpss-info {
+    flex: 1;
+}
+
+.dpss-title {
+    font-size: 32px;
+    font-weight: bold;
+    margin: 0 0 10px 0;
+    text-shadow: 0 2px 10px rgba(0,0,0,0.3);
+}
+
+.dpss-artist {
+    font-size: 20px;
+    margin: 0 0 15px 0;
+    opacity: 0.9;
+}
+
+.dpss-excerpt {
+    font-size: 16px;
+    line-height: 1.6;
+    opacity: 0.8;
+}
+
+.dpss-player {
+    margin-top: 20px;
+}
+
+/* Latest Songs Grid */
+.dpss-latest-songs {
+    display: grid;
+    gap: 30px;
+    margin: 40px 0;
+}
+
+.dpss-latest-songs.dpss-columns-2 {
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+}
+
+.dpss-latest-songs.dpss-columns-3 {
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+}
+
+.dpss-latest-songs.dpss-columns-4 {
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+}
+
+.dpss-song-item {
+    background: white;
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    transition: all 0.3s;
+}
+
+.dpss-song-item:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+}
+
+.dpss-song-thumbnail {
+    position: relative;
+    overflow: hidden;
+    padding-bottom: 100%;
+}
+
+.dpss-song-thumbnail img {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s;
+}
+
+.dpss-song-item:hover .dpss-song-thumbnail img {
+    transform: scale(1.1);
+}
+
+.dpss-song-content {
+    padding: 20px;
+}
+
+.dpss-song-title {
+    font-size: 20px;
+    font-weight: bold;
+    margin: 0 0 10px 0;
+}
+
+.dpss-song-title a {
+    color: var(--dpss-dark);
+    text-decoration: none;
+    transition: color 0.3s;
+}
+
+.dpss-song-title a:hover {
+    color: var(--dpss-primary);
+}
+
+.dpss-song-artist {
+    font-size: 16px;
+    color: #666;
+    margin: 0;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .dpss-song-of-day.dpss-layout-card {
+        flex-direction: column;
+        text-align: center;
+    }
+    
+    .dpss-artwork img {
+        width: 150px;
+        height: 150px;
+    }
+    
+    .dpss-title {
+        font-size: 24px;
+    }
+    
+    .dpss-artist {
+        font-size: 18px;
+    }
+    
+    .dpss-latest-songs {
+        grid-template-columns: 1fr !important;
+    }
+}
+
+/* Loading State */
+.dpss-loading {
+    text-align: center;
+    padding: 60px 20px;
+}
+
+.dpss-loading::after {
+    content: '';
+    display: inline-block;
+    width: 40px;
+    height: 40px;
+    border: 4px solid rgba(102,126,234,0.3);
+    border-top-color: var(--dpss-primary);
+    border-radius: 50%;
+    animation: dpss-spin 1s linear infinite;
+}
+
+@keyframes dpss-spin {
+    to { transform: rotate(360deg); }
+}
+
+/* No Song Message */
+.dpss-no-song {
+    text-align: center;
+    padding: 60px 20px;
+    background: rgba(0,0,0,0.05);
+    border-radius: 15px;
+    color: #666;
+    font-size: 18px;
+}
+
+/* Animations */
+@keyframes dpss-fade-in {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.dpss-song-item {
+    animation: dpss-fade-in 0.5s ease-out both;
+}
+
+.dpss-song-item:nth-child(1) { animation-delay: 0.1s; }
+.dpss-song-item:nth-child(2) { animation-delay: 0.2s; }
+.dpss-song-item:nth-child(3) { animation-delay: 0.3s; }
+.dpss-song-item:nth-child(4) { animation-delay: 0.4s; }
+.dpss-song-item:nth-child(5) { animation-delay: 0.5s; }
+.dpss-song-item:nth-child(6) { animation-delay: 0.6s; }
+
+/* Particle Effects (Optional) */
+.dpss-particles {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+}
+
+.dpss-particle {
+    position: absolute;
+    width: 3px;
+    height: 3px;
+    background: var(--dpss-gold);
+    border-radius: 50%;
+    opacity: 0;
+    animation: dpss-particle-float 8s ease-in-out infinite;
+}
+
+@keyframes dpss-particle-float {
+    0%, 100% {
+        opacity: 0;
+        transform: translateY(0) translateX(0);
+    }
+    10% {
+        opacity: 1;
+    }
+    90% {
+        opacity: 0.5;
+    }
+    100% {
+        transform: translateY(-100vh) translateX(50px);
+    }
+}
+
+/* Sonaar Player Integration Overrides */
+.dpss-player .sonaar-player {
+    border-radius: 15px;
+    overflow: hidden;
+}
+
+.dpss-player .srp-player-progress {
+    background: linear-gradient(90deg, var(--dpss-primary), var(--dpss-secondary));
+}
+
+/* Accessibility */
+.dpss-song-item:focus-within {
+    outline: 3px solid var(--dpss-primary);
+    outline-offset: 3px;
+}
+
+.dpss-play-button:focus {
+    outline: 3px solid var(--dpss-gold);
+    outline-offset: 5px;
+}
+
+/* Print Styles */
+@media print {
+    .dpss-stage-wrapper,
+    .dpss-player {
+        display: none;
+    }
+}
