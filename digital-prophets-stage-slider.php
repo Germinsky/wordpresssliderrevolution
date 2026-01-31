@@ -208,6 +208,7 @@ class Digital_Prophets_Stage_Slider {
      * Enqueue frontend scripts and styles
      */
     public function enqueue_scripts() {
+        // Always enqueue CSS for any shortcodes on the page
         wp_enqueue_style(
             'dpss-stage-slider',
             DPSS_PLUGIN_URL . 'assets/css/stage-slider.css',
@@ -215,17 +216,43 @@ class Digital_Prophets_Stage_Slider {
             DPSS_VERSION
         );
         
-        wp_enqueue_script(
-            'dpss-stage-slider',
-            DPSS_PLUGIN_URL . 'assets/js/stage-slider.js',
-            array('jquery'),
-            DPSS_VERSION,
-            true
-        );        
-        wp_localize_script('dpss-stage-slider', 'dpssData', array(
-            'ajaxurl' => admin_url('admin-ajax.php'),
-            'nonce'   => wp_create_nonce('dpss_nonce'),
-        ));
+        // Only enqueue JS if slider shortcode or widget is present
+        // This prevents conflicts with wallet connections and other scripts
+        global $post;
+        $load_js = false;
+        
+        if (is_a($post, 'WP_Post') && (
+            has_shortcode($post->post_content, 'dp_song_stage') ||
+            has_shortcode($post->post_content, 'dp_song_of_day') ||
+            has_shortcode($post->post_content, 'dp_latest_songs') ||
+            has_shortcode($post->post_content, 'dp_sonaar_player')
+        )) {
+            $load_js = true;
+        }
+        
+        // Also check if widget is active
+        if (is_active_widget(false, false, 'dpss_song_of_day') || 
+            is_active_widget(false, false, 'dpss_latest_songs')) {
+            $load_js = true;
+        }
+        
+        // Allow manual override via filter
+        $load_js = apply_filters('dpss_load_scripts', $load_js);
+        
+        if ($load_js) {
+            wp_enqueue_script(
+                'dpss-stage-slider',
+                DPSS_PLUGIN_URL . 'assets/js/stage-slider.js',
+                array('jquery'),
+                DPSS_VERSION,
+                true
+            );
+            
+            wp_localize_script('dpss-stage-slider', 'dpssData', array(
+                'ajaxurl' => admin_url('admin-ajax.php'),
+                'nonce'   => wp_create_nonce('dpss_nonce'),
+            ));
+        }
     }
     
     /**

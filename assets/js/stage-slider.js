@@ -8,10 +8,19 @@
     const DPSS = {
         
         init: function() {
-            this.initStageSlider();
-            this.initParallax();
-            this.initPlayerIntegration();
-            this.initAutoAdvance();
+            // Only initialize if slider is present on page
+            if ($('.dpss-stage-wrapper').length === 0) {
+                return;
+            }
+            
+            try {
+                this.initStageSlider();
+                this.initParallax();
+                this.initPlayerIntegration();
+                this.initAutoAdvance();
+            } catch(e) {
+                console.error('DPSS initialization error:', e);
+            }
         },
         
         /**
@@ -91,16 +100,18 @@
          * Initialize Sonaar player integration
          */
         initPlayerIntegration: function() {
-            // Wait for Sonaar player to be ready
-            $(document).on('sonaar/player/ready', function() {
-                DPSS.syncPlayerWithSlider();
-            });
+            // Only attach if Sonaar elements exist
+            if ($('.dpss-play-button').length === 0) {
+                return;
+            }
             
-            // Handle play button clicks
-            $('.dpss-play-button').on('click', function(e) {
+            // Handle play button clicks - use event delegation to avoid conflicts
+            $(document).on('click', '.dpss-play-button', function(e) {
                 e.preventDefault();
+                e.stopPropagation();
                 const songId = $(this).closest('.dpss-stage-wrapper').data('song-id');
                 DPSS.playSong(songId);
+                return false;
             });
         },
         
@@ -238,13 +249,19 @@
         }
     };
     
-    // Initialize on document ready
+    // Initialize on document ready with timeout to avoid blocking other scripts
     $(document).ready(function() {
-        DPSS.init();
+        // Delay initialization to let wallet and other critical scripts load first
+        setTimeout(function() {
+            if (typeof DPSS !== 'undefined') {
+                DPSS.init();
+            }
+        }, 500);
     });
     
-    // Expose to global scope
-    window.DPSS = DPSS;
-    window.dpssPlaySong = DPSS.playSong;
+    // Expose to global scope only if needed
+    if (typeof window.DPSS === 'undefined') {
+        window.DPSS = DPSS;
+    }
     
 })(jQuery);

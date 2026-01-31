@@ -261,58 +261,45 @@
     </div>
     
     <script>
+    // Simple play function - non-blocking
     function dpssPlaySong(songId) {
-        // Multiple fallback methods to play Sonaar
-        
-        // Method 1: Try IRON.sonaar API
-        if (typeof IRON !== 'undefined' && IRON.sonaar && IRON.sonaar.player) {
-            try {
-                IRON.sonaar.player.play();
+        try {
+            // Try to find and click the Sonaar player button
+            var playButton = document.querySelector('.iron-audioplayer .play-btn, .sonaar-play-pause');
+            if (playButton) {
+                setTimeout(function() { playButton.click(); }, 100);
                 return false;
-            } catch(e) {
-                console.log('IRON.sonaar.player.play() failed:', e);
             }
+        } catch(e) {
+            console.log('DPSS play error:', e);
         }
-        
-        // Method 2: Try clicking the Sonaar play button
-        var playButton = document.querySelector('.sonaar-play-pause, .sr-play-button, .iron-audioplayer .play-btn');
-        if (playButton) {
-            playButton.click();
-            return false;
-        }
-        
-        // Method 3: Try finding player by album ID
-        var playerDiv = document.querySelector('[data-album-id="' + songId + '"] .play-btn');
-        if (playerDiv) {
-            playerDiv.click();
-            return false;
-        }
-        
-        // Method 4: Look for any Sonaar player and click it
-        var anyPlayer = document.querySelector('.sonaar-player .play-btn, .iron-audioplayer button');
-        if (anyPlayer) {
-            anyPlayer.click();
-            return false;
-        }
-        
-        // If all else fails, follow the link
         return true;
     }
     
-    // Add parallax effect on mouse move
-    document.addEventListener('DOMContentLoaded', function() {
-        const wrapper = document.querySelector('.dpss-stage-wrapper');
-        const background = wrapper.querySelector('.dpss-stage-background');
-        const content = wrapper.querySelector('.dpss-stage-content');
-        
-        wrapper.addEventListener('mousemove', function(e) {
-            const xPos = (e.clientX / window.innerWidth - 0.5) * 30;
-            const yPos = (e.clientY / window.innerHeight - 0.5) * 30;
-            
-            background.style.transform = `translate(${xPos}px, ${yPos}px) scale(1.15)`;
-            content.style.transform = `translate(${xPos * 0.3}px, ${yPos * 0.3}px)`;
+    // Add parallax effect on mouse move - only if slider exists
+    if (document.querySelector('.dpss-stage-wrapper')) {
+        document.addEventListener('DOMContentLoaded', function() {
+            try {
+                const wrapper = document.querySelector('.dpss-stage-wrapper');
+                if (!wrapper) return;
+                
+                const background = wrapper.querySelector('.dpss-stage-background');
+                const content = wrapper.querySelector('.dpss-stage-content');
+                
+                if (!background || !content) return;
+                
+                wrapper.addEventListener('mousemove', function(e) {
+                    const xPos = (e.clientX / window.innerWidth - 0.5) * 30;
+                    const yPos = (e.clientY / window.innerHeight - 0.5) * 30;
+                    
+                    background.style.transform = `translate(${xPos}px, ${yPos}px) scale(1.15)`;
+                    content.style.transform = `translate(${xPos * 0.3}px, ${yPos * 0.3}px)`;
+                });
+            } catch(e) {
+                console.log('DPSS parallax error:', e);
+            }
         });
-    });
+    }
     </script>
 </body>
 </html>
