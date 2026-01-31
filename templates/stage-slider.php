@@ -239,42 +239,92 @@
             <?php endif; ?>
             
             <?php if ($atts['controls'] === 'true'): ?>
-            <a href="<?php echo esc_url($song_data['permalink']); ?>" 
-               class="dpss-play-button"
-               onclick="return dpssPlaySong(<?php echo esc_js($song_data['id']); ?>);">
-                ▶ PLAY SONG OF THE DAY
-            </a>
+            <div style="margin-bottom: 20px;">
+                <a href="<?php echo esc_url($song_data['permalink']); ?>" 
+                   class="dpss-play-button"
+                   id="dpss-main-play-btn"
+                   onclick="dpssPlaySong(<?php echo esc_js($song_data['id']); ?>); return false;">
+                    ▶ PLAY SONG OF THE DAY
+                </a>
+                <p style="font-size: 14px; color: #ccc; margin-top: 10px;">
+                    Can't play? <a href="<?php echo esc_url($song_data['permalink']); ?>" style="color: #667eea;">Click here to view full song page</a>
+                </p>
+            </div>
             <?php endif; ?>
             
-            <div class="dpss-sonaar-player" data-song-id="<?php echo esc_attr($song_data['id']); ?>">
+            <div class="dpss-sonaar-player" data-song-id="<?php echo esc_attr($song_data['id']); ?>" style="margin-top: 40px; width: 100%; max-width: 600px;">
                 <?php 
-                // Always show Sonaar player for integration
-                echo do_shortcode('[sonaar_audioplayer albums="' . $song_data['id'] . '" 
-                    hide_artwork="false" 
-                    show_playlist="false" 
-                    show_album_market="false"
-                    player_layout="skin_button"
-                    autoplay="' . $atts['autoplay'] . '"]'); 
+                // Sonaar player - try different shortcode variations
+                if (function_exists('sonaar_shortcode_single_player')) {
+                    echo do_shortcode('[sonaar_audioplayer albums="' . $song_data['id'] . '" show_playlist="true" show_album_market="false" show_track_market="false"]'); 
+                } else {
+                    echo do_shortcode('[sonaar_audioplayer post_id="' . $song_data['id'] . '"]');
+                }
                 ?>
             </div>
         </div>
     </div>
     
     <script>
-    // Simple play function - non-blocking
+    // Enhanced play function with multiple Sonaar player selectors
     function dpssPlaySong(songId) {
         try {
-            // Try to find and click the Sonaar player button
-            var playButton = document.querySelector('.iron-audioplayer .play-btn, .sonaar-play-pause');
-            if (playButton) {
-                setTimeout(function() { playButton.click(); }, 100);
-                return false;
+            // List of possible Sonaar player button selectors (in order of preference)
+            var selectors = [
+                '.srp_player_grid .sr_it-play-icon',           // Sonaar grid player
+                '.iron-audioplayer .play-pause-btn',           // Iron player
+                '.sonaar-player .play-pause-bt',               // Sonaar player button
+                '.sr-play-circle',                              // Sonaar play circle
+                'button[aria-label*="Play"]',                   // Any play button with aria-label
+                '.album-player .play',                          // Album player
+                '.sonaar_single_player .playpause',            // Single player
+                '#sonaar-player .play-btn',                     // ID-based selector
+                '.dpss-sonaar-player button',                   // Any button in our player div
+                '.dpss-sonaar-player .fa-play',                // FontAwesome play icon
+                '.dpss-sonaar-player [class*="play"]'          // Any element with "play" in class
+            ];
+            
+            // Try each selector
+            for (var i = 0; i < selectors.length; i++) {
+                var button = document.querySelector(selectors[i]);
+                if (button) {
+                    console.log('Found play button with selector:', selectors[i]);
+                    button.click();
+                    return false;
+                }
             }
+            
+            // If no button found, try to trigger Sonaar API
+            if (typeof IRON !== 'undefined' && IRON.sonaar) {
+                if (IRON.sonaar.player && typeof IRON.sonaar.player.play === 'function') {
+                    IRON.sonaar.player.play();
+                    return false;
+                }
+            }
+            
+            console.warn('No Sonaar player button found. Available buttons:', document.querySelectorAll('button, .play-pause-btn, [class*="play"]'));
         } catch(e) {
-            console.log('DPSS play error:', e);
+            console.error('DPSS play error:', e);
         }
         return true;
     }
+    
+    // Debug helper - run this in browser console if play isn't working: dpssDebug()
+    window.dpssDebug = function() {
+        console.log('=== DPSS Debug Info ===');
+        console.log('Song ID:', <?php echo json_encode($song_data['id']); ?>);
+        console.log('IRON object exists:', typeof IRON !== 'undefined');
+        if (typeof IRON !== 'undefined') {
+            console.log('IRON.sonaar exists:', !!IRON.sonaar);
+            if (IRON.sonaar) {
+                console.log('IRON.sonaar.player:', IRON.sonaar.player);
+            }
+        }
+        console.log('All buttons:', document.querySelectorAll('button'));
+        console.log('All play-related elements:', document.querySelectorAll('[class*="play"], [class*="Play"]'));
+        console.log('Sonaar player div:', document.querySelector('.dpss-sonaar-player'));
+        console.log('===================');
+    };
     
     // Add parallax effect on mouse move - only if slider exists
     if (document.querySelector('.dpss-stage-wrapper')) {
