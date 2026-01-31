@@ -246,27 +246,56 @@
             </a>
             <?php endif; ?>
             
-            <?php if ($song_data['audio_url']): ?>
-            <div class="dpss-sonaar-player">
+            <div class="dpss-sonaar-player" data-song-id="<?php echo esc_attr($song_data['id']); ?>">
                 <?php 
+                // Always show Sonaar player for integration
                 echo do_shortcode('[sonaar_audioplayer albums="' . $song_data['id'] . '" 
-                    hide_artwork="true" 
+                    hide_artwork="false" 
                     show_playlist="false" 
-                    player_layout="skin_boxed_tracklist"
+                    show_album_market="false"
+                    player_layout="skin_button"
                     autoplay="' . $atts['autoplay'] . '"]'); 
                 ?>
             </div>
-            <?php endif; ?>
         </div>
     </div>
     
     <script>
     function dpssPlaySong(songId) {
-        // Trigger Sonaar player
-        if (typeof IRON !== 'undefined' && IRON.sonaar) {
-            IRON.sonaar.player.play();
+        // Multiple fallback methods to play Sonaar
+        
+        // Method 1: Try IRON.sonaar API
+        if (typeof IRON !== 'undefined' && IRON.sonaar && IRON.sonaar.player) {
+            try {
+                IRON.sonaar.player.play();
+                return false;
+            } catch(e) {
+                console.log('IRON.sonaar.player.play() failed:', e);
+            }
+        }
+        
+        // Method 2: Try clicking the Sonaar play button
+        var playButton = document.querySelector('.sonaar-play-pause, .sr-play-button, .iron-audioplayer .play-btn');
+        if (playButton) {
+            playButton.click();
             return false;
         }
+        
+        // Method 3: Try finding player by album ID
+        var playerDiv = document.querySelector('[data-album-id="' + songId + '"] .play-btn');
+        if (playerDiv) {
+            playerDiv.click();
+            return false;
+        }
+        
+        // Method 4: Look for any Sonaar player and click it
+        var anyPlayer = document.querySelector('.sonaar-player .play-btn, .iron-audioplayer button');
+        if (anyPlayer) {
+            anyPlayer.click();
+            return false;
+        }
+        
+        // If all else fails, follow the link
         return true;
     }
     

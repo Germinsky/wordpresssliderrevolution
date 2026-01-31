@@ -108,18 +108,39 @@
          * Play song via Sonaar player
          */
         playSong: function(songId) {
-            if (typeof IRON !== 'undefined' && IRON.sonaar) {
-                // Find the album/track
-                const player = IRON.sonaar.player;
-                
-                // Try to play
-                if (player && typeof player.play === 'function') {
-                    player.play();
-                } else {
-                    // Fallback to clicking the play button
-                    $('.sonaar-play-button').first().trigger('click');
+            // Method 1: Try IRON.sonaar API
+            if (typeof IRON !== 'undefined' && IRON.sonaar && IRON.sonaar.player) {
+                try {
+                    IRON.sonaar.player.play();
+                    return true;
+                } catch(e) {
+                    console.log('IRON.sonaar.player.play() failed:', e);
                 }
             }
+            
+            // Method 2: Click Sonaar play button
+            var $playBtn = $('.sonaar-play-pause, .sr-play-button, .iron-audioplayer .play-btn').first();
+            if ($playBtn.length) {
+                $playBtn.trigger('click');
+                return true;
+            }
+            
+            // Method 3: Find player by album ID
+            var $albumPlayer = $('[data-album-id="' + songId + '"] .play-btn');
+            if ($albumPlayer.length) {
+                $albumPlayer.trigger('click');
+                return true;
+            }
+            
+            // Method 4: Click any visible Sonaar player
+            var $anyPlayer = $('.sonaar-player .play-btn, .iron-audioplayer button').first();
+            if ($anyPlayer.length) {
+                $anyPlayer.trigger('click');
+                return true;
+            }
+            
+            console.warn('No Sonaar player found to trigger');
+            return false;
         },
         
         /**

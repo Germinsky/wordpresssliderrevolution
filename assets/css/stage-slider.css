@@ -271,13 +271,47 @@
 }
 
 /* Sonaar Player Integration Overrides */
-.dpss-player .sonaar-player {
-    border-radius: 15px;
-    overflow: hidden;
+.dpss-sonaar-player {
+    margin-top: 40px;
+    width: 100%;
+    max-width: 600px;
+    z-index: 100;
 }
 
-.dpss-player .srp-player-progress {
-    background: linear-gradient(90deg, var(--dpss-primary), var(--dpss-secondary));
+.dpss-player .sonaar-player,
+.dpss-sonaar-player .sonaar-player {
+    border-radius: 15px;
+    overflow: hidden;
+    background: rgba(255, 255, 255, 0.1) !important;
+    backdrop-filter: blur(10px);
+    padding: 15px;
+}
+
+.dpss-player .srp-player-progress,
+.dpss-sonaar-player .srp-player-progress {
+    background: linear-gradient(90deg, var(--dpss-primary), var(--dpss-secondary)) !important;
+}
+
+/* Make Sonaar play button more visible */
+.dpss-sonaar-player .sonaar-play-pause,
+.dpss-sonaar-player .sr-play-button,
+.dpss-sonaar-player .play-btn {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+    border-radius: 50% !important;
+    width: 60px !important;
+    height: 60px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    cursor: pointer !important;
+    transition: all 0.3s !important;
+}
+
+.dpss-sonaar-player .sonaar-play-pause:hover,
+.dpss-sonaar-player .sr-play-button:hover,
+.dpss-sonaar-player .play-btn:hover {
+    transform: scale(1.1) !important;
+    box-shadow: 0 0 30px rgba(102,126,234,0.8) !important;
 }
 
 /* Accessibility */
